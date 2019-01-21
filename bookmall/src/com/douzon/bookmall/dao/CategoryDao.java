@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.douzon.bookmall.vo.CategoryVo;
 
-public class CategoryDao {
+public class CategoryDao extends AbstractDao{
 	public boolean insert(CategoryVo categoryVo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -133,18 +133,5 @@ public class CategoryDao {
 		return list;
 	}
 	
-	private Connection getConnection() throws SQLException {
-		Connection conn = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			String url = "jdbc:mysql://localhost:3306/bookmall?autoReconnect=true&useSSL=false";
-			conn = DriverManager.getConnection(url, "bookmall", "bookmall");
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		}
-		
-		return conn;
-	}
+	
 }

@@ -13,30 +13,30 @@ import com.douzon.bookmall.vo.BookVo;
 import com.douzon.bookmall.vo.CartVo;
 import com.douzon.bookmall.vo.MemberVo;
 
-public class CartDao {
+public class CartDao extends AbstractDao {
 	public boolean insert(CartVo cartVo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		boolean result = false;
 		try {
 			conn = getConnection();
-			String sql ="insert into cart values(?,?,?)";
+			String sql = "insert into cart values(?,?,?)";
 			pstmt = conn.prepareStatement(sql);
-			
+
 			pstmt.setLong(1, cartVo.getCount());
 			pstmt.setLong(2, cartVo.getMember().getNo());
 			pstmt.setLong(3, cartVo.getBook().getNo());
-			
+
 			int count = pstmt.executeUpdate();
 			result = count == 1;
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if (pstmt != null) {
 					pstmt.close();
 				}
-				if(conn != null) {
+				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
@@ -45,12 +45,9 @@ public class CartDao {
 		}
 		return result;
 	}
-	
-	
-	
-	
-	
-	public List<CartVo> getList(){
+
+	public List<CartVo> getList() {
+
 		List<CartVo> list = new ArrayList<CartVo>();
 		Connection conn = null;
 		Statement stmt = null;
@@ -61,40 +58,40 @@ public class CartDao {
 
 			String sql = "select * from cart order by member_no asc";
 			rs = stmt.executeQuery(sql);
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				long count = rs.getLong(1);
-				MemberVo member=new MemberDao().getMember(rs.getLong(2));
-				BookVo book=new BookDao().getBook(rs.getLong(3));
+				MemberVo member = new MemberDao().getMember(rs.getLong(2));
+				BookVo book = new BookDao().getBook(rs.getLong(3));
 				CartVo vo = new CartVo();
 				vo.setCount(count);
 				vo.setMember(member);
 				vo.setBook(book);
 				list.add(vo);
 			}
-			
+
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(rs != null) {
+				if (rs != null) {
 					rs.close();
 				}
-				if(stmt != null) {
+				if (stmt != null) {
 					stmt.close();
 				}
-				if(conn != null) {
+				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		
+
 		return list;
 	}
-	public List<CartVo> getList(long no){
+
+	public List<CartVo> getList(long no) {
 		List<CartVo> list = new ArrayList<CartVo>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -104,52 +101,37 @@ public class CartDao {
 			String sql = "select * from cart where member_no=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, no);
-			
+
 			rs = pstmt.executeQuery(sql);
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				CartVo vo = new CartVo();
 				vo.setCount(rs.getLong(1));
 				vo.setMember(new MemberDao().getMember(rs.getLong(2)));
 				vo.setBook(new BookDao().getBook(rs.getLong(3)));
-				
+
 				list.add(vo);
 			}
-			
+
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(rs != null) {
+				if (rs != null) {
 					rs.close();
 				}
-				if(pstmt != null) {
+				if (pstmt != null) {
 					pstmt.close();
 				}
-				if(conn != null) {
+				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		
+
 		return list;
 	}
-	
-	private Connection getConnection() throws SQLException {
-		Connection conn = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			String url = "jdbc:mysql://localhost:3306/bookmall?autoReconnect=true&useSSL=false";
-			conn = DriverManager.getConnection(url, "bookmall", "bookmall");
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		}
-		
-		return conn;
-	}
+
 }
