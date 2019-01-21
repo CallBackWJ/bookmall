@@ -1,19 +1,10 @@
 package com.douzon.bookmall.vo;
 
 public class CartVo {
-	private long no;
 	private long count;
 	private MemberVo member;
 	private BookVo book;
 	
-	
-	
-	public long getNo() {
-		return no;
-	}
-	public void setNo(long no) {
-		this.no = no;
-	}
 	public long getCount() {
 		return count;
 	}

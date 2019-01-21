@@ -20,7 +20,7 @@ public class CartDao {
 		boolean result = false;
 		try {
 			conn = getConnection();
-			String sql ="insert into cart values(null,?,?,?)";
+			String sql ="insert into cart values(?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, cartVo.getCount());
@@ -59,16 +59,14 @@ public class CartDao {
 			conn = getConnection();
 			stmt = conn.createStatement();
 
-			String sql = "select * from cart order by no asc";
+			String sql = "select * from cart order by member_no asc";
 			rs = stmt.executeQuery(sql);
 			
 			while(rs.next()) {
-				long no=rs.getLong(1);
-				long count = rs.getLong(2);
-				MemberVo member=new MemberDao().getMember(rs.getLong(3));
-				BookVo book=new BookDao().getBook(rs.getLong(4));
+				long count = rs.getLong(1);
+				MemberVo member=new MemberDao().getMember(rs.getLong(2));
+				BookVo book=new BookDao().getBook(rs.getLong(3));
 				CartVo vo = new CartVo();
-				vo.setNo(no);
 				vo.setCount(count);
 				vo.setMember(member);
 				vo.setBook(book);
@@ -111,10 +109,9 @@ public class CartDao {
 			
 			while(rs.next()) {
 				CartVo vo = new CartVo();
-				vo.setNo(rs.getLong(1));
-				vo.setCount(rs.getLong(2));
-				vo.setMember(new MemberDao().getMember(rs.getLong(3)));
-				vo.setBook(new BookDao().getBook(rs.getLong(4)));
+				vo.setCount(rs.getLong(1));
+				vo.setMember(new MemberDao().getMember(rs.getLong(2)));
+				vo.setBook(new BookDao().getBook(rs.getLong(3)));
 				
 				list.add(vo);
 			}
